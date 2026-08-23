@@ -43,3 +43,12 @@ To sort by player id were using group by which prevents players from mixing thei
 
 # Historical Data Usage
 I will start off by using player statistics from the 2019-2025 seasons to provide the model with a larger training dataset. Older data may become less representative of the current NFL, so the historical range can later be treated as a modeling decision and evaluated through validation performance.
+
+# Selecting Trend Features
+Initially using these trend features for WRs - targets, target share, receiving yards, and receiving air yards. A Trend is defined as 3-game rolling average - 5-game rolling average, where positive values will indicate recent performance/usage above the broader 5 game baseline and negative values indicate a decline
+
+# Early-season Predictions (Weeks 1-3)
+With the current rolling features, they limit the historical information early in the season. Week 1 gives no current-season history, while weeks 2-3 are just based on those games. Need to determine how the model should handle insufficient current-season data without relying too heavily on potentially outdated previous season performance.
+
+# RB - Opportunity
+Opportunity is defined as carries + targets, which gives us a sense of RB usage. Targets are used over receptions because it shows more opportunities.
