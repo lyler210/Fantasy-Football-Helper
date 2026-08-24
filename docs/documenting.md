@@ -52,3 +52,6 @@ With the current rolling features, they limit the historical information early i
 
 # RB - Opportunity
 Opportunity is defined as carries + targets, which gives us a sense of RB usage. Targets are used over receptions because it shows more opportunities.
+
+# Sleeper API
+Sleeper provides league specific scoring_settings and roster_positions. My initial ML model will use a consistent baseline target, while future league integration can adapt projections/recommendations to each league's scoring rules
