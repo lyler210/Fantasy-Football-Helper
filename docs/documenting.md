@@ -111,3 +111,13 @@ Model parameters
 → represent what the model learned from the data
 
 We test different hyperparameter values, choose the bes combination, then the model uses those settings to learn its model parameters from the training data
+
+# Splitting up WR and TE
+At this point I have finished finding all of the models that I want to use for each position before doing the final evaluation. But I want to separate the WR and TE dataset because their offensive roles differ depending on the team. An elite TE could see the same amount of opportunities as a WR2 or even a WR1, while other TEs have less opportunity.
+
+# Models for positions
+WR - Linear Regression
+TE - Linear Regression
+RB - Linear Regression
+QB - Tuned/Grid-searched Random Forest
+K - Linear Regression
