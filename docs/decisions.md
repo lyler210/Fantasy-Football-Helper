@@ -37,3 +37,6 @@ TE - Linear Regression
 RB - Linear Regression
 QB - Tuned/Grid-searched Random Forest
 K - Linear Regression
+
+# Early season
+Early-season rolling features may use the immediately preceding season until enough current-season games exist

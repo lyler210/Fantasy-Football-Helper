@@ -73,3 +73,6 @@ Model parameters
 → represent what the model learned from the data
 
 We test different hyperparameter values, choose the bes combination, then the model uses those settings to learn its model parameters from the training data
+
+# Addition of matchup features
+Prediction features are selected based on validation performance, while matchup metrics can remain available to the recommendation/explanation layer as grounded contextual evidence
