@@ -40,3 +40,14 @@ K - Linear Regression
 
 # Early season
 Early-season rolling features may use the immediately preceding season until enough current-season games exist
+
+# Matchup features comparison
+Opponent fantasy points allowed features were evaluated by position using 2024 temporal validation. RB improved in both MAE and RMSE and will keep the matchup features. WR, TE, QB, and K showed negligible or worse predictive performance, so matchup features are excluded from their prediction models but retained as contextual information for downstream recommendations and explanations
+
+# Final Design
+WR -> Linear Regression
+TE -> Linear Regression
+RB -> Linear Regression + Opponent matchup features
+QB -> Random Forest
+K -> Linear Regression
+Model selection used historical temporal validation and 2024 validation. Final models were retrained on 2019-2024 and evaluated once on untouched 2025 data. No model changes were amde after viewing 2025 performance.

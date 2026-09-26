@@ -76,3 +76,29 @@ We test different hyperparameter values, choose the bes combination, then the mo
 
 # Addition of matchup features
 Prediction features are selected based on validation performance, while matchup metrics can remain available to the recommendation/explanation layer as grounded contextual evidence
+
+# Final test metrics
+WR
+- Final Model: Linear Regression
+- 2025 MAE: 4.383
+- 2025 RMSE: 5.887
+
+TE
+- Final Model: Linear Regression
+- 2025 MAE: 3.612
+- 2025 RMSE: 5.072
+
+RB
+- Final Model: Linear Regression + matchup features
+- 2025 MAE: 4.458
+- 2025 RMSE: 6.285
+
+QB
+- Final Model: Random Forest
+- 2025 MAE: 6.898
+- 2025 RMSE: 8.456
+
+K
+- Final Model: Linear Regression
+- 2025 MAE: 3.006
+- 2025 RMSE: 3.772
