@@ -102,3 +102,6 @@ K
 - Final Model: Linear Regression
 - 2025 MAE: 3.006
 - 2025 RMSE: 3.772
+
+# Exporting models
+The final trained models are serialized using joblib. A JSON configuration stores each positiion model's required feature list and prediction target so inference uses the same features and ordering as training.

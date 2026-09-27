@@ -34,15 +34,18 @@ FEATURE_CONFIG = load_feature_config()
 
 def predict_player(position, player_features):
     position = position.upper()
-
+    
+    # Validating position
     if position not in MODELS:
         raise ValueError(
             f"Unsupported position: {position}. "
             f"Expected one of {list(MODELS.keys())}."
         )
     
+    # Get required feature list from feature_config.json
     required_features = FEATURE_CONFIG[position]["features"]
 
+    # Check if anything is missing
     missing_features = [
         feature
         for feature in required_features
@@ -55,17 +58,21 @@ def predict_player(position, player_features):
             f"{missing_features}"
         )
     
+    # Put features in exact training order
     ordered_features = {
         feature: player_features[feature]
         for feature in required_features
     }
 
+    # Convert into 1-row DataFrame
     input_df = pd.DataFrame(
         [ordered_features]
-    )
-
+    )   
+    
     model = MODELS[position]
 
+    # Correct model.predict()
     prediction = model.predict(input_df)[0]
 
+    # Return projected fantasy points
     return float(prediction)
