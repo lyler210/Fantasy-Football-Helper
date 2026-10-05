@@ -10,6 +10,7 @@ from app.features.player_features import (
     add_qb_features,
     add_kicker_features,
 )
+from app.features.matchup_features import add_matchup_features
 
 # Same raw input used during feature engineering
 player_stats = nfl.load_player_stats(range(2018, 2026))
@@ -85,6 +86,7 @@ raw_df = add_receiving_features(raw_df)
 raw_df = add_rb_features(raw_df)
 raw_df = add_qb_features(raw_df)
 raw_df = add_kicker_features(raw_df)
+raw_df = add_matchup_features(raw_df)
 
 raw_df = raw_df[
     raw_df["season"] >= 2019
@@ -385,3 +387,88 @@ for column in kicker_feature_columns:
         kicker_all_match = False
 
 print("\nAll kicker features match:", kicker_all_match)
+
+# Matchup Features Testing
+matchup_feature_columns = [
+    "opp_points_allowed_avg_3",
+    "opp_points_allowed_avg_5",
+    "opp_points_allowed_trend",
+]
+
+for column in matchup_feature_columns:
+
+    comparison = raw_df[
+        [
+            "player_id",
+            "season",
+            "week",
+            "position",
+            "opponent_team",
+            column,
+        ]
+    ].merge(
+        saved_df[
+            [
+                "player_id",
+                "season",
+                "week",
+                column,
+            ]
+        ],
+        on=[
+            "player_id",
+            "season",
+            "week",
+        ],
+        how="inner",
+        validate="one_to_one",
+        suffixes=("_generated", "_saved"),
+    )
+
+    comparison["match"] = np.isclose(
+        comparison[f"{column}_generated"],
+        comparison[f"{column}_saved"],
+        equal_nan=True,
+    )
+
+    print(f"\n{column}")
+
+    print("Total rows:", len(comparison))
+
+    print(
+        "Generated nulls:",
+        comparison[f"{column}_generated"].isna().sum()
+    )
+
+    print(
+        "Saved nulls:",
+        comparison[f"{column}_saved"].isna().sum()
+    )
+
+    print("\nMismatches by position:")
+
+    print(
+        comparison.loc[
+            ~comparison["match"]
+        ]
+        .groupby("position")
+        .size()
+        .sort_values(ascending=False)
+    )
+
+    print("\nFirst mismatches:")
+
+    print(
+        comparison.loc[
+            ~comparison["match"],
+            [
+                "player_id",
+                "season",
+                "week",
+                "position",
+                "opponent_team",
+                f"{column}_generated",
+                f"{column}_saved",
+            ]
+        ].head(10)
+    )
