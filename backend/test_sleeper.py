@@ -4,9 +4,14 @@ from app.services.sleeper import (
     get_user_leagues,
     get_user_roster,
     get_gsis_ids_from_sleeper,
+)
+
+from app.pipelines.inference_pipeline import (
     find_opponent,
     build_roster_inference_inputs,
-    split_bye_week_players
+    split_bye_week_players,
+    prepare_historical_data,
+    build_roster_predictions
 )
 
 username = "lyler210"
@@ -61,3 +66,61 @@ for player in players_to_predict:
 print("\nBYE WEEK PLAYERS:")
 for player in bye_week_players:
     print(player)
+
+# Load historical NFL stats
+player_stats = nfl.load_player_stats(
+    range(2018, 2027)
+)
+
+historical_df = player_stats.to_pandas()
+
+historical_df = historical_df[
+    historical_df["season_type"] == "REG"
+].copy()
+
+# Add rookie/veteran status metadata needed by feature engineering
+historical_df = prepare_historical_data(
+    historical_df
+)
+
+target_season = 2026
+target_week = 8
+
+historical_df = historical_df[
+    (historical_df["season"] < target_season)
+    |
+    (
+        (historical_df["season"] == target_season)
+        & (historical_df["week"] < target_week)
+    )
+].copy()
+
+inference_inputs = build_roster_inference_inputs(
+    sleeper_ids=chosen_roster["players"],
+    season=target_season,
+    week=target_week,
+    schedule_df=schedule_df,
+)
+
+players_to_predict, bye_week_players = split_bye_week_players(
+    inference_inputs
+)
+
+predictions_df = build_roster_predictions(
+    historical_df,
+    players_to_predict
+)
+
+print("\nROSTER PREDICTIONS:")
+
+print(
+    predictions_df[
+        [
+            "player_name",
+            "position",
+            "team",
+            "opponent_team",
+            "projected_fantasy_points",
+        ]
+    ]
+)

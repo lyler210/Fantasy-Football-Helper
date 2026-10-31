@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 # Create a temporary row representing the upcoming game we want to predict.
 # This row contains information known before the game, while game stats
 # such as targets, yards, touchdowns, etc. remain NaN.
@@ -14,6 +13,18 @@ def add_inference_row(
     week,
 ):
     df = df.copy()
+
+    existing_row = (
+        (df["player_id"] == player_id) &
+        (df["season"] == season) &
+        (df["week"] == week)
+    )
+
+    if existing_row.any():
+        raise ValueError(
+            f"Row already exists for {player_id}, "
+            f"{season} Week {week}"
+        )
 
     # Basic information we already know before the upcoming game
     inference_row = {
@@ -99,6 +110,12 @@ def add_inference_player_status(
         (df["season"] == season) &
         (df["week"] == week)
     )
+
+    if inference_mask.sum() != 1:
+        raise ValueError(
+            f"Expected exactly one inference row for "
+            f"{player_id}, {season} Week {week}"
+        )
 
     # Attach the player's status information to the synthetic row
     df.loc[
